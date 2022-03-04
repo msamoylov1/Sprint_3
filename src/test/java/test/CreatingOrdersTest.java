@@ -2,7 +2,6 @@ package test;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.After;
@@ -17,12 +16,12 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
 @RunWith(Parameterized.class)
-public class CreatingOrdersTest extends DataHalper {
+public class CreatingOrdersTest extends StepsForTests {
 
-    private final List<String> Color;
+    private final List<String> color;
 
     public CreatingOrdersTest(List<String> color) {
-        Color = color;
+        this.color = color;
     }
 
     @Parameterized.Parameters
@@ -37,7 +36,7 @@ public class CreatingOrdersTest extends DataHalper {
 
     @Before
     public void setUp() {
-        RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru";
+        baseUrl();
     }
 
     @Test
@@ -53,7 +52,7 @@ public class CreatingOrdersTest extends DataHalper {
                 5,
                 "2020-06-06",
                 "Saske, come back to Konoha",
-                Color);
+                color);
         Response response =
                 given().log().all()
                         .header("Content-type", "application/json")
@@ -64,18 +63,13 @@ public class CreatingOrdersTest extends DataHalper {
                         response.then().log().all().statusCode(201)
                         .and().body("track", notNullValue());
         JsonPath jsonPathOrder = response.jsonPath();
-        track = jsonPathOrder.get("track");
+        DataHelper.track = jsonPathOrder.get("track");
     }
 
     //отмена заказа
     @After
-    public void cancelOrder() {
-        given().log().all()
-                .header("Content-type", "application/json")
-                .and()
-                .when()
-                .param("track", track)
-                .put("/api/v1/orders/cancel");
+    public void deleteData() {
+        cancelOrder();
     }
 
 }
