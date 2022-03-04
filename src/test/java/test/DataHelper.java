@@ -2,13 +2,11 @@ package test;
 
 import java.util.Random;
 
-public class DataHalper {
+public class DataHelper {
 
-    public int track;
-    public int idOrder;
-    public int idCourier;
-
-    //генерация рандомной строки
+    public static int track;
+    public static int idOrder;
+    public static int idCourier;
     public static String getRandomString(int length) {
         String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();
@@ -19,4 +17,5 @@ public class DataHalper {
         }
         return sb.toString();
     }
+    public static String randomLogin;
 }
