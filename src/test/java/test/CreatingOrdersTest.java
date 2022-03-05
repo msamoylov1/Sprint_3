@@ -5,7 +5,6 @@ import io.qameta.allure.junit4.DisplayName;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -16,7 +15,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
 @RunWith(Parameterized.class)
-public class CreatingOrdersTest extends StepsForTests {
+public class CreatingOrdersTest extends BaseTest {
 
     private final List<String> color;
 
@@ -32,11 +31,6 @@ public class CreatingOrdersTest extends StepsForTests {
                 {List.of("GREY")}, //выбран 1 цвет - GREY
                 {List.of()} //не выбран цвет
         };
-    }
-
-    @Before
-    public void setUp() {
-        baseUrl();
     }
 
     @Test
@@ -69,7 +63,8 @@ public class CreatingOrdersTest extends StepsForTests {
     //отмена заказа
     @After
     public void deleteData() {
-        cancelOrder();
+        StepsForCreatingOrder stepsForCreatingOrder = new StepsForCreatingOrder();
+        stepsForCreatingOrder.cancelOrder();
     }
 
 }
