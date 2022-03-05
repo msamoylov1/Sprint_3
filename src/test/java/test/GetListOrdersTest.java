@@ -3,25 +3,19 @@ package test;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 
-public class GetListOrdersTest extends StepsForTests {
-
-    @Before
-    public void setUp() {
-        baseUrl();
-    }
+public class GetListOrdersTest extends BaseTest {
 
     @Test
     @DisplayName("Проверка ручки /api/v1/orders - получить список заказов")
     @Description("Проверяем верный ли код ответа и содержимое ответа")
     public void getListOrdersTest() {
+        StepsForGetListOrders stepsForGetListOrders = new StepsForGetListOrders();
         //Получаем список заказов
-        Response response = getListOrders();
-
+        Response response = stepsForGetListOrders.getListOrders();
         //проверяем тело ответа
         response.then().body("orders", notNullValue())
                 .and().body("orders.id", notNullValue())
