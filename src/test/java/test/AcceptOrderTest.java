@@ -8,30 +8,29 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.equalTo;
-import static test.DataHelper.getRandomString;
 
-public class AcceptOrderTest extends StepsForTests {
+public class AcceptOrderTest extends BaseTest {
 
     @Before
     public void setUp() {
-        baseUrl();
-        DataHelper.randomLogin = getRandomString(5);
+        StepsForAcceptOrder stepsForAcceptOrder = new StepsForAcceptOrder();
         //создаём заказ и получаем трек-номер заказа
-        sendPostOrder();
+        stepsForAcceptOrder.sendPostOrder();
         //получаем заказ по номеру и записываем его id
-        getOrderByTrack();
+        stepsForAcceptOrder.getOrderByTrack();
         //создаём курьера
-        sendNewCourier();
+        stepsForAcceptOrder.sendNewCourier();
         //логинимся курьером и получаем id
-        loginCourierAndGetId();
+        stepsForAcceptOrder.loginCourierAndGetId();
     }
 
     @Test
     @DisplayName("Тест ручки /api/v1/orders/accept/:id - принять заказ (успех)")
     @Description("Все передаваемые данные (id курьера/заказа) - валидные")
     public void acceptOrderFullFieldTest() {
+        StepsForAcceptOrder stepsForAcceptOrder = new StepsForAcceptOrder();
         //принимаем заказ
-        Response response = acceptNewOrder();
+        Response response = stepsForAcceptOrder.acceptNewOrder();
         //проверка тела ответа
         response.then().log().all().statusCode(200)
                 .and().body("ok", equalTo(true));
@@ -41,8 +40,9 @@ public class AcceptOrderTest extends StepsForTests {
     @DisplayName("Тест ручки /api/v1/orders/accept/:id - принять заказ (400 - нет id курьера)")
     @Description("id курьера не передаётся в запросе")
     public void acceptOrderNoIdCourierTest() {
+        StepsForAcceptOrder stepsForAcceptOrder = new StepsForAcceptOrder();
         //принимаем заказ
-        Response response = acceptNoIdCourierNewOrder();
+        Response response = stepsForAcceptOrder.acceptNoIdCourierNewOrder();
         //проверяем тело ответа
         response.then().log().all().statusCode(400)
                 .and().body("message", equalTo("Недостаточно данных для поиска"));
@@ -52,8 +52,9 @@ public class AcceptOrderTest extends StepsForTests {
     @DisplayName("Тест ручки /api/v1/orders/accept/:id - принять заказ (400 - нет id заказа)")
     @Description("id заказа не передаётся в запросе")
     public void acceptOrderNoIdCOrderTest() {
+        StepsForAcceptOrder stepsForAcceptOrder = new StepsForAcceptOrder();
         //принимаем заказ
-        Response response = acceptNoIdOrderNewOrder();
+        Response response = stepsForAcceptOrder.acceptNoIdOrderNewOrder();
         //проверка тела ответа
         response.then().log().all().statusCode(400)
                 .and().body("message", equalTo("Недостаточно данных для поиска"));
@@ -63,8 +64,9 @@ public class AcceptOrderTest extends StepsForTests {
     @DisplayName("Тест ручки /api/v1/orders/accept/:id - принять заказ (404 - несуществующий id заказа)")
     @Description("Передаётся несуществующий id заказа в запросе")
     public void acceptOrderFalseIdOrderTest() {
+        StepsForAcceptOrder stepsForAcceptOrder = new StepsForAcceptOrder();
         //принимаем заказ
-        Response response = acceptFalseIdOrderNewOrder();
+        Response response = stepsForAcceptOrder.acceptFalseIdOrderNewOrder();
         //проверяем тело ответа
         response.then().log().all().statusCode(404)
                 .and().body("message", equalTo("Заказа с таким id не существует"));
@@ -74,8 +76,9 @@ public class AcceptOrderTest extends StepsForTests {
     @DisplayName("Тест ручки /api/v1/orders/accept/:id - принять заказ (404 - несуществующий id курьера)")
     @Description("Передаётся несуществующий id курьера в запросе")
     public void acceptOrderFalseIdCourierTest() {
+        StepsForAcceptOrder stepsForAcceptOrder = new StepsForAcceptOrder();
         //принимаем заказ
-        Response response = acceptFalseIdCourierNewOrder();
+        Response response = stepsForAcceptOrder.acceptFalseIdCourierNewOrder();
         //проверяем тело ответа
         response.then().log().all().statusCode(404)
                 .and().body("message", equalTo("Курьера с таким id не существует"));
@@ -84,11 +87,12 @@ public class AcceptOrderTest extends StepsForTests {
 
     @After
     public void deleteData() {
+        StepsForAcceptOrder stepsForAcceptOrder = new StepsForAcceptOrder();
         //отменим заказ
-        cancelOrder();
+        stepsForAcceptOrder.cancelOrder();
         //завершаем заказ
-        finishOrder();
+        stepsForAcceptOrder.finishOrder();
         //удаление курьера
-        deleteNewCourier();
+        stepsForAcceptOrder.deleteNewCourier();
     }
 }
