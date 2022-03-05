@@ -8,26 +8,25 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.equalTo;
-import static test.DataHelper.getRandomString;
 
-public class DeleteCourierTest extends StepsForTests {
+public class DeleteCourierTest extends BaseTest {
 
     @Before
     public void setUp() {
-        baseUrl();
-        DataHelper.randomLogin = getRandomString(5);
+        StepsForDeleteCourier stepsForDeleteCourier = new StepsForDeleteCourier();
         //создаём курьера
-        sendNewCourier();
+        stepsForDeleteCourier.sendNewCourier();
         //логинимся курьером и получаем id
-        loginCourierAndGetId();
+        stepsForDeleteCourier.loginCourierAndGetId();
     }
 
     @Test
     @DisplayName("Тест ручки /api/v1/courier/:id - удаление курьера (успех)")
     @Description("Отправляются существующий id курьера")
     public void deleteCourierTest() {
+        StepsForDeleteCourier stepsForDeleteCourier = new StepsForDeleteCourier();
         //удаляем ранее созданного курьера
-        Response response = deleteNewCourier();
+        Response response = stepsForDeleteCourier.deleteNewCourier();
         //проверка ответа
         response.then().statusCode(200)
                 .and().body("ok", equalTo(true));
@@ -38,8 +37,9 @@ public class DeleteCourierTest extends StepsForTests {
     @DisplayName("Тест ручки /api/v1/courier/:id - удаление курьера (ошибка 404)")
     @Description("Отправляются несуществующий id курьера")
     public void deleteCourierFalseIdTest() {
+        StepsForDeleteCourier stepsForDeleteCourier = new StepsForDeleteCourier();
         //удаление курьера
-        Response response = deleteFalseIdNewCourier();
+        Response response = stepsForDeleteCourier.deleteFalseIdNewCourier();
         //проверка ответа
         response.then().log().all().statusCode(404)
                 .and().body("message", equalTo("Курьера с таким id нет"));
@@ -50,8 +50,9 @@ public class DeleteCourierTest extends StepsForTests {
     @DisplayName("Тест ручки /api/v1/courier/:id - удаление курьера (ошибка 400)")
     @Description("Не отправляются id курьера")
     public void deleteCourierNoIdTest() {
+        StepsForDeleteCourier stepsForDeleteCourier = new StepsForDeleteCourier();
         //удаление курьера
-        Response response = deleteNoIdNewCourier();
+        Response response = stepsForDeleteCourier.deleteNoIdNewCourier();
         //проверка ответа
         response.then().log().all().statusCode(400)
                 .and().body("message", equalTo("Недостаточно данных для удаления курьера"));
@@ -59,7 +60,8 @@ public class DeleteCourierTest extends StepsForTests {
 
     @After
     public void deleteData() {
+        StepsForDeleteCourier stepsForDeleteCourier = new StepsForDeleteCourier();
         //удаление курьера
-        deleteNewCourier();
+        stepsForDeleteCourier.deleteNewCourier();
     }
 }
